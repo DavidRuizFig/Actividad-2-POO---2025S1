@@ -1,1 +1,88 @@
+class Automovil:
+    def __init__(self, marca, modelo, motor, tipo_combustible, tipo_automovil, puertas, asientos, velocidad_maxima, color, automatico):
+        self.marca = marca
+        self.modelo = modelo
+        self.motor = motor
+        self.tipo_combustible = tipo_combustible
+        self.tipo_automovil = tipo_automovil
+        self.puertas = puertas
+        self.asientos = asientos
+        self.velocidad_maxima = velocidad_maxima
+        self.color = color
+        self.automatico = automatico
+        self.velocidad_actual = 0  # Inicialmente, el vehículo está detenido
+        self.multas = 0  # Contador de multas por exceso de velocidad
 
+    # Métodos Get y Set para la transmisión automática
+    def es_automatico(self):
+        return self.automatico
+
+    def set_automatico(self, automatico):
+        self.automatico = automatico
+
+    # Método para acelerar con control de multas
+    def acelerar(self, incremento):
+        if self.velocidad_actual + incremento > self.velocidad_maxima:
+            print("Se ha resgistrado un exceso de velocidad. Se ha generado una multa.")
+            self.multas += 1
+            self.velocidad_actual = self.velocidad_maxima
+        else:
+            self.velocidad_actual += incremento
+        print(f"Velocidad actual: {self.velocidad_actual} km/h")
+
+    # Método para desacelerar
+    def desacelerar(self, decremento):
+        if self.velocidad_actual - decremento < 0:
+            print("Error: La velocidad no puede ser negativa.")
+            self.velocidad_actual = 0
+        else:
+            self.velocidad_actual -= decremento
+        print(f"Velocidad actual: {self.velocidad_actual} km/h")
+
+    # Método para frenar
+    def frenar(self):
+        self.velocidad_actual = 0
+        print("El automóvil ha frenado y está detenido.")
+
+    # Método para calcular tiempo estimado de llegada
+    def tiempo_llegada(self, distancia):
+        if self.velocidad_actual > 0:
+            tiempo = distancia / self.velocidad_actual
+            print(f"Tiempo estimado de llegada: {tiempo:.2f} horas")
+        else:
+            print("El automóvil está detenido, no se puede calcular el tiempo de llegada.")
+
+    # Métodos para manejar multas
+    def tiene_multas(self):
+        return self.multas > 0
+
+    def total_multas(self):
+        return self.multas * 650000  
+
+    # Método para mostrar los atributos del automóvil
+    def mostrar_info(self):
+        print(f"Marca: {self.marca}")
+        print(f"Modelo: {self.modelo}")
+        print(f"Motor: {self.motor}L")
+        print(f"Tipo de combustible: {self.tipo_combustible}")
+        print(f"Tipo de automóvil: {self.tipo_automovil}")
+        print(f"Número de puertas: {self.puertas}")
+        print(f"Cantidad de asientos: {self.asientos}")
+        print(f"Velocidad máxima: {self.velocidad_maxima} km/h")
+        print(f"Color: {self.color}")
+        print(f"Transmisión automática: {'Sí' if self.automatico else 'No'}")
+        print(f"Velocidad actual: {self.velocidad_actual} km/h")
+        print(f"Multas registradas: {self.multas}, Total a pagar: {self.total_multas()}")
+
+# Método principal
+if __name__ == "__main__":
+    auto = Automovil("Toyota", 2022, 2.5, "gasolina", "SUV", 4, 5, 180, "rojo", True)
+
+    auto.mostrar_info()
+    auto.acelerar(100)
+    auto.acelerar(90)  # Esto generará una multa
+    auto.desacelerar(50)
+    auto.frenar()
+
+    print("\n¿Tiene multas?:", "Sí" if auto.tiene_multas() else "No")
+    print(f"Total a pagar en multas: {auto.total_multas()} pesos colombianos")
