@@ -1,3 +1,30 @@
+from enum import Enum
+
+class TipoCombustible(Enum):
+    GASOLINA = "Gasolina"
+    BIOETANOL = "Bioetanol"
+    DIESEL = "Diésel"
+    BIODIESEL = "Biodiésel"
+    GAS_NATURAL = "Gas Natural"
+
+class TipoAutomovil(Enum):
+    CARRO_CIUDAD = "Carro de ciudad"
+    SUBCOMPACTO = "Subcompacto"
+    COMPACTO = "Compacto"
+    FAMILIAR = "Familiar"
+    EJECUTIVO = "Ejecutivo"
+    SUV = "SUV"
+
+class Color(Enum):
+    BLANCO = "Blanco"
+    NEGRO = "Negro"
+    ROJO = "Rojo"
+    NARANJA = "Naranja"
+    AMARILLO = "Amarillo"
+    VERDE = "Verde"
+    AZUL = "Azul"
+    VIOLETA = "Violeta"
+
 class Automovil:
     def __init__(self, marca, modelo, motor, tipo_combustible, tipo_automovil, puertas, asientos, velocidad_maxima, color, automatico):
         self.marca = marca
@@ -10,27 +37,25 @@ class Automovil:
         self.velocidad_maxima = velocidad_maxima
         self.color = color
         self.automatico = automatico
-        self.velocidad_actual = 0  # Inicialmente, el vehículo está detenido
-        self.multas = 0  # Contador de multas por exceso de velocidad
+        self.velocidad_actual = 0
+        self.multas = 1
 
-    # Métodos Get y Set para la transmisión automática
+    # Métodos get y set
     def es_automatico(self):
         return self.automatico
 
     def set_automatico(self, automatico):
         self.automatico = automatico
 
-    # Método para acelerar con control de multas
     def acelerar(self, incremento):
         if self.velocidad_actual + incremento > self.velocidad_maxima:
-            print("Se ha resgistrado un exceso de velocidad. Se ha generado una multa.")
+            print("Exceso de velocidad detectado. Se ha generado una multa.")
             self.multas += 1
             self.velocidad_actual = self.velocidad_maxima
         else:
             self.velocidad_actual += incremento
         print(f"Velocidad actual: {self.velocidad_actual} km/h")
 
-    # Método para desacelerar
     def desacelerar(self, decremento):
         if self.velocidad_actual - decremento < 0:
             print("Error: La velocidad no puede ser negativa.")
@@ -39,12 +64,10 @@ class Automovil:
             self.velocidad_actual -= decremento
         print(f"Velocidad actual: {self.velocidad_actual} km/h")
 
-    # Método para frenar
     def frenar(self):
         self.velocidad_actual = 0
         print("El automóvil ha frenado y está detenido.")
 
-    # Método para calcular tiempo estimado de llegada
     def tiempo_llegada(self, distancia):
         if self.velocidad_actual > 0:
             tiempo = distancia / self.velocidad_actual
@@ -52,35 +75,34 @@ class Automovil:
         else:
             print("El automóvil está detenido, no se puede calcular el tiempo de llegada.")
 
-    # Métodos para manejar multas
     def tiene_multas(self):
         return self.multas > 0
 
     def total_multas(self):
-        return self.multas * 650000  
+        return self.multas * 650000
 
-    # Método para mostrar los atributos del automóvil
     def mostrar_info(self):
         print(f"Marca: {self.marca}")
         print(f"Modelo: {self.modelo}")
         print(f"Motor: {self.motor}L")
-        print(f"Tipo de combustible: {self.tipo_combustible}")
-        print(f"Tipo de automóvil: {self.tipo_automovil}")
+        print(f"Tipo de combustible: {self.tipo_combustible.value}")
+        print(f"Tipo de automóvil: {self.tipo_automovil.value}")
         print(f"Número de puertas: {self.puertas}")
         print(f"Cantidad de asientos: {self.asientos}")
         print(f"Velocidad máxima: {self.velocidad_maxima} km/h")
-        print(f"Color: {self.color}")
+        print(f"Color: {self.color.value}")
         print(f"Transmisión automática: {'Sí' if self.automatico else 'No'}")
         print(f"Velocidad actual: {self.velocidad_actual} km/h")
-        print(f"Multas registradas: {self.multas}, Total a pagar: {self.total_multas()}")
+        print(f"Multas registradas: {self.multas}, Total a pagar: {self.total_multas()} pesos colombianos")
 
 # Método principal
 if __name__ == "__main__":
-    auto = Automovil("Toyota", 2022, 2.5, "gasolina", "SUV", 4, 5, 180, "rojo", True)
+    auto = Automovil("Toyota", 2022, 2.5, TipoCombustible.GASOLINA, TipoAutomovil.SUV, 4, 5, 180, Color.AZUL, True)
 
     auto.mostrar_info()
-    auto.acelerar(100)
-    auto.acelerar(90)  # Esto generará una multa
+    auto.velocidad_actual = 100
+    print(f"\nVelocidad actual: {auto.velocidad_actual} km/h")
+    auto.acelerar(90)
     auto.desacelerar(50)
     auto.frenar()
 
